@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: qa_vlm
+    build:
+      context: ./app
+      args:
+        HF_TOKEN: ${HF_TOKEN}
+    environment:
+      - MODEL_NAME=${MODEL_NAME:-HuggingFaceTB/SmolVLM2-2.2B-Instruct}
+      - MODEL_PATH=/models/model
+      - HF_HOME=/models/hf_cache
+      - MODEL_DEVICE=${MODEL_DEVICE:-gpu}
+      - ALLOW_MODEL_DOWNLOAD=${ALLOW_MODEL_DOWNLOAD:-no}
+      - HF_TOKEN=${HF_TOKEN:-}
+      - GRADIO_PORT=7860
+    ports:
+      - "${GRADIO_PORT:-7860}:7860"
+    volumes:
+      - ./model_data:/models/model
+      - ./hf_cache:/models/hf_cache
+    networks:
+      - backend
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+volumes:
+  smolvlm_model_data:
+  hf_cache:
+
+networks:
+  backend:
+    driver: bridge
