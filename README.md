@@ -107,6 +107,10 @@ GRADIO_PORT=7860
 3. Запустить:
 
 ```bash
+cd QA_VLM
+```
+
+```bash
 docker compose up --build
 ```
 
